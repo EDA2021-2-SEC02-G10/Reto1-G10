@@ -37,6 +37,51 @@ los mismos.
 
 # Construccion de modelos
 
+def newCatalog():
+    """
+
+    """
+    catalog = {'artworks': None,
+               'artists': None}
+
+    catalog['artworks'] = lt.newList()
+    catalog['artists'] = lt.newList()
+
+    return catalog
+
+
+def addArtwork(catalog, artwork):
+
+    lt.addLast(catalog['artworks'], artwork)
+
+    artists = artwork['artists'].split(",")
+
+    for artist in artists:
+        addArtworkArtist(catalog, artist.strip(), artwork)
+
+
+def addArtworkArtist(catalog, artistname, artwork):
+
+    artists = catalog['artists']
+    posartist = lt.isPresent(artists, artistname)
+    if posartist > 0:
+        artist = lt.getElement(artists, posartist)
+    else:
+        artist = newArtist(artistname)
+        lt.addLast(artists, artist)
+    lt.addLast(artist['artworks'], artwork)
+
+
+def newArtist(name):
+
+    artist = {'name':"", "artworks":None}
+    artist['name'] = name
+    artist['artworks'] = lt.newList('ARRAY_LIST')
+
+    return artist
+
+
+
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos

@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from App.controller import initCatalog, loadData
 import config as cf
 import sys
 import controller
@@ -37,7 +38,12 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Listar cronologicamente los artistas")
+    print("3- Listar cronologicamente las adquisiciones")
+    print("4- Clasificar cronologicamente los artistas")
+    print("5- Clasificar las obras por la nacionalidad de sus creadores")
+    print("6- Transportar obras de un departamento")
+    print("7- Proponer una exposicion del museo")
 
 catalog = None
 
@@ -49,6 +55,14 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        loadData(catalog)
+        sizeArtworks = lt.size(catalog['Artworks'])
+        sizeArtists = lt.size(catalog['Artists'])
+        print('Obras cargadas: ' + str(sizeArtworks))
+        print('Artistas Cargados: ' + str(sizeArtists))
+        print('Los ultimos 3 artistas cargados son: ' + str(lt.subList(catalog, sizeArtists, 3)))
+        print('Las ultimas 3 obras cargadas son: ' + str(lt.subList(catalog, sizeArtworks, 3)))
 
     elif int(inputs[0]) == 2:
         pass
