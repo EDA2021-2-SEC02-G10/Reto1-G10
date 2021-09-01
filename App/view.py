@@ -19,14 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
-from App.controller import initCatalog, loadData
+""""
+from DISClib.DataStructures.arraylist import getElement
+from controller import initCatalog, loadData
 import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
-
+"""
+import config as cf
+import sys
+import controller
+from DISClib.ADT import list as lt
+assert cf
 
 """
 La vista se encarga de la interacción con el usuario
@@ -34,6 +40,7 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
+
 
 def printMenu():
     print("Bienvenido")
@@ -45,6 +52,7 @@ def printMenu():
     print("6- Transportar obras de un departamento")
     print("7- Proponer una exposicion del museo")
 
+
 catalog = None
 
 """
@@ -55,14 +63,18 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
-        loadData(catalog)
-        sizeArtworks = lt.size(catalog['Artworks'])
-        sizeArtists = lt.size(catalog['Artists'])
+        catalog = controller.initCatalog()
+        controller.loadData(catalog)
+        sizeArtworks = lt.size(catalog['artworks'])
+        sizeArtists = lt.size(catalog['artists'])
         print('Obras cargadas: ' + str(sizeArtworks))
         print('Artistas Cargados: ' + str(sizeArtists))
-        print('Los ultimos 3 artistas cargados son: ' + str(lt.subList(catalog, sizeArtists, 3)))
-        print('Las ultimas 3 obras cargadas son: ' + str(lt.subList(catalog, sizeArtworks, 3)))
+        print('Los ultimos 3 artistas cargados son: ' + str(lt.getElement(catalog['artists'], sizeArtists)) + ', '
+        + str(lt.getElement(catalog['artists'], sizeArtists-1)) + ', '
+        + str(lt.getElement(catalog['artists'], sizeArtists-2)))
+        print('Las ultimos 3 obras cargadas son: ' + str(lt.getElement(catalog['artworks'], sizeArtists)) + ', '
+        + str(lt.getElement(catalog['artworks'], sizeArtists-1)) + ', '
+        + str(lt.getElement(catalog['artworks'], sizeArtists-2)))
 
     elif int(inputs[0]) == 2:
         pass

@@ -24,18 +24,19 @@
  * Dario Correal - Version inicial
  """
 
-
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
 """
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
+Se define la estructura de un catálogo de videos. El catálogo tendrá 
+dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
 
 # Construccion de modelos
+
 
 def newCatalog():
     """
@@ -50,31 +51,26 @@ def newCatalog():
     return catalog
 
 
+# Funciones para agregar informacion al catalogo
+
 def addArtwork(catalog, artwork):
 
     lt.addLast(catalog['artworks'], artwork)
 
-    artists = artwork['artists'].split(",")
 
-    for artist in artists:
-        addArtworkArtist(catalog, artist.strip(), artwork)
+def addArtist(catalog, artist):
 
-
-def addArtworkArtist(catalog, artistname, artwork):
-
-    artists = catalog['artists']
-    posartist = lt.isPresent(artists, artistname)
-    if posartist > 0:
-        artist = lt.getElement(artists, posartist)
+    if artist not in catalog['artists']:
+        lt.addLast(catalog['artists'], artist)
     else:
-        artist = newArtist(artistname)
-        lt.addLast(artists, artist)
-    lt.addLast(artist['artworks'], artwork)
+        pass
 
 
-def newArtist(name):
+# Funciones para creacion de datos
 
-    artist = {'name':"", "artworks":None}
+def newArtist(name):  
+
+    artist = {'name': "", "artworks": None}
     artist['name'] = name
     artist['artworks'] = lt.newList('ARRAY_LIST')
 
@@ -82,9 +78,9 @@ def newArtist(name):
 
 
 
-# Funciones para agregar informacion al catalogo
 
-# Funciones para creacion de datos
+
+
 
 # Funciones de consulta
 
