@@ -50,7 +50,7 @@ def loadData(catalog):
 
 def loadArtworks(catalog):
 
-    artworksfile = cf.data_dir + 'Artworks-utf8-large.csv'
+    artworksfile = cf.data_dir + 'Artworks-utf8-10pct.csv'
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for row in input_file:
         model.addArtwork(catalog, row['Title'], row['DateAcquired'])
@@ -58,7 +58,7 @@ def loadArtworks(catalog):
 
 def loadArtists(catalog):
 
-    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-10pct.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for row in input_file:
         model.addArtist(catalog, row['DisplayName'])
