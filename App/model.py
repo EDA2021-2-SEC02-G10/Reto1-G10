@@ -24,10 +24,15 @@
  * Dario Correal - Version inicial
  """
 
+from DISClib.DataStructures.arraylist import size
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort as ins
+from DISClib.Algorithms.Sorting import mergesort as ms
+from DISClib.Algorithms.Sorting import quicksort as qs
 assert cf
+import time
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá 
@@ -38,24 +43,26 @@ los mismos.
 # Construccion de modelos
 
 
-def newCatalog():
+def newCatalog(type1, type2):
     """
 
     """
     catalog = {'artworks': None,
                'artists': None}
 
-    catalog['artworks'] = lt.newList()
-    catalog['artists'] = lt.newList()
+    catalog['artworks'] = lt.newList(type1)
+    catalog['artists'] = lt.newList(type2)
 
     return catalog
 
 
 # Funciones para agregar informacion al catalogo
 
-def addArtwork(catalog, artwork):
+def addArtwork(catalog, title, dateAcquired):
 
-    lt.addLast(catalog['artworks'], artwork)
+    dictArtwork = newArtwork(title)
+    dictArtwork['DateAcquired'] = dateAcquired
+    lt.addLast(catalog['artworks'], dictArtwork)
 
 
 def addArtist(catalog, artist):
@@ -72,18 +79,67 @@ def newArtist(name):
 
     artist = {'name': "", "artworks": None}
     artist['name'] = name
-    artist['artworks'] = lt.newList('ARRAY_LIST')
+    artist['artworks'] = lt.newList()
 
     return artist
 
 
+def newArtwork(title):
+    artwork = {'Title': "", 'DateAcquired': 0, 'Artists': None}
+    artwork['Title'] = title
+    artwork['Artists'] = lt.newList()
 
-
-
+    return artwork
 
 
 # Funciones de consulta
 
+def sortArtworks(catalog, ltsize, sortType):
+    sub_list = lt.subList(catalog['artworks'], 1, ltsize)
+    sub_list = sub_list.copy()
+    start_time = time.process_time()
+    sorted_list = None
+    if sortType == 1:
+        sorted_list = ins.sort(sub_list, cmpArtworkByDateAcquired)
+    elif sortType == 2:
+        sorted_list = sa.sort(sub_list, cmpArtworkByDateAcquired)
+    elif sortType == 3:
+        sorted_list = ms.sort(sub_list, cmpArtworkByDateAcquired)
+    elif sortType == 4:
+        sorted_list = qs.sort(sub_list, cmpArtworkByDateAcquired)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg, sorted_list
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+def cmpArtworkByDateAcquired(artwork1, artwork2):
+    """ Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de artwork2
+        Args:
+            artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
+            artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
+    """
+    date1 = artwork1['DateAcquired'].split("-")
+    date2 = artwork2['DateAcquired'].split("-")
+    r = None
+    if (len(date1) > 1) and (len(date2) > 1):
+        if int(date1[0]) < int(date2[0]):
+            r = True
+        elif int(date1[0]) > int(date2[0]):
+            r = False
+        elif int(date1[2]) < int(date2[2]):
+            r = True
+        elif int(date1[2]) > int(date2[2]):
+            r = False
+        elif int(date1[1]) < int(date2[1]):
+            r = True
+        elif int(date1[1]) > int(date2[1]):
+            r = False
+
+    return r
+
+
+
