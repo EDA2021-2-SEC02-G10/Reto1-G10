@@ -1,4 +1,6 @@
 Alejandro Borda - a.borda@uniandes.edu.co - 202020727 Juan Sebastián Lache - js.lache@uniandes.edu.co - 201821331
+Requerimiento 3: Juan Sebastián Lache
+Requerimiento 4: Alejandro Borda
 
 #ISIS1225 - Librerias de soporte
 

@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.ADT import list as lt
 import config as cf
 import model
 import csv
@@ -32,11 +33,11 @@ El controlador se encarga de mediar entre la vista y el modelo.
 # Inicialización del Catálogo de libros
 
 
-def initCatalog(type1, type2):
+def initCatalog():
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog(type1, type2)
+    catalog = model.newCatalog()
     return catalog
 
 # Funciones para la carga de datos
@@ -44,30 +45,32 @@ def initCatalog(type1, type2):
 
 def loadData(catalog):
 
-    loadArtists(catalog)
     loadArtworks(catalog)
+    loadArtists(catalog)
 
 
 def loadArtworks(catalog):
 
-    artworksfile = cf.data_dir + 'Artworks-utf8-10pct.csv'
+    artworksfile = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for row in input_file:
-        model.addArtwork(catalog, row['Title'], row['DateAcquired'])
+        lstid = (row['ConstituentID'][1:-1]).split(", ")
+        lstmedium = row['Medium'].split(",")
+        model.addArtwork(catalog, row['Title'], row['DateAcquired'], lstmedium, row['Dimensions'], lstid, row['ObjectID'], row['CreditLine'])
 
 
 def loadArtists(catalog):
 
-    artistsfile = cf.data_dir + 'Artists-utf8-10pct.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for row in input_file:
-        model.addArtist(catalog, row['DisplayName'])
+        model.addInfoArtist(catalog, row['DisplayName'], row['ConstituentID'])
 
 
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
 
-def sortArtworks(catalog, size, sortType):
+def sortArtworks(catalog, lstsize, a1, a2):
 
-    return model.sortArtworks(catalog, size, sortType)
+    return model.sortArtworks(catalog, lstsize, a1, a2)

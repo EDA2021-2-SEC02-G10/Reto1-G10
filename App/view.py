@@ -45,15 +45,32 @@ operación solicitada
 """
 
 
-def printSortResults(ord_artworks, sample):
-    size = lt.size(ord_artworks)
-    if size > sample:
-        print("Las primeros ", sample, " obras ordenados son:")
-        i = 1
-        while i <= sample:
-            artwork = lt.getElement(ord_artworks, i)
-            print('Titulo: ' + artwork['Title'] + ', fecha de adquisicion: ' + artwork['DateAcquired'])
-            i += 1
+def printSortedResults(ordlst):
+
+    size = len(ordlst)
+
+    for i in range(3):
+        titlef = ordlst[i]['Title']
+        nameArtistf = ordlst[i]['Artists']
+        datef = ordlst[i]['DateAcquired']
+        mediumf = ordlst[i]['Medium']
+        dimensionsf = ordlst[i]['Dimensions']
+        fdict = {'Title': titlef, 'Artists': nameArtistf, 'Date': datef, 'Medium': mediumf, 'Dimensions': dimensionsf}
+
+        titlei = ordlst[-i]['Title']
+        nameArtisti = ordlst[-i]['Artists']
+        datei = ordlst[-i]['DateAcquired']
+        mediumi = ordlst[-i]['Medium']
+        dimensionsi = ordlst[-i]['Dimensions']
+        idict = {'Title': titlei, 'Artists': nameArtisti, 'Date': datei, 'Medium': mediumi, 'Dimensions': dimensionsi}
+
+        print(idict)
+        print(fdict)
+
+
+
+    
+
 
 
 def printMenu():
@@ -76,47 +93,46 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Digite el tipo de estructura de datos que desea manejar para la lista de artistas"
-        + " (lista 1) o la lista de obreas (lista 2) en donde 1 es un ArrayList y 2 es una SingleLinkedList ")
-        type1 = int(input("Tipo de estructura de datos lista 1 de artistas: "))
-        type2 = int(input("Tipo de estructura de datos lista 2 de obras: "))
-
-        if type1 == 1:
-            type1 = 'ARRAY_LIST'
-        elif type1 == 2:
-            type1 = 'SINGLE_LINKED'
-
-        if type2 == 1:
-            type2 = 'ARRAY_LIST'
-        elif type2 == 2:
-            type2 = 'SINGLE_LINKED'
-
         print("Cargando información de los archivos ....")
-        catalog = controller.initCatalog(type1, type2)
+        catalog = controller.initCatalog()
         controller.loadData(catalog)
         sizeArtworks = lt.size(catalog['artworks'])
         sizeArtists = lt.size(catalog['artists'])
         print('Obras cargadas: ' + str(sizeArtworks))
         print('Artistas Cargados: ' + str(sizeArtists))
-        print('Los ultimos 3 artistas cargados son: ' + str(lt.getElement(catalog['artists'], sizeArtists)) + ', '
-        + str(lt.getElement(catalog['artists'], sizeArtists-1)) + ', '
-        + str(lt.getElement(catalog['artists'], sizeArtists-2)))
-        A1 = lt.getElement(catalog['artworks'], sizeArtworks)
-        A2 = lt.getElement(catalog['artworks'], sizeArtworks-1)
-        A3 = lt.getElement(catalog['artworks'], sizeArtworks-2)
-        print('Las ultimos 3 obras cargadas son: ' + str(A1['Title']) + ', '
-        + str(A2['Title']) + ', '
-        + str(A3['Title']))
+        print(lt.getElement(catalog["artists"], 2))
+        print(lt.getElement(catalog["artworks"], 2))
 
+    elif int(inputs[0]) == 2:
+
+        a=1
+                     
     elif int(inputs[0]) == 3:
-        size = input('Indique el tamaño de la muestra: ')
-        sortType = int(input('Indique el algoritmo de sorting que desea usar (1=InsertionSort, 2=ShellSort, 3=MergeSort, 4=QuickSort) : '))
-        showsize = int(input('indique el tamaño de la lista ordenada que desea ver: '))
-        result = controller.sortArtworks(catalog, int(size), sortType)
-        print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
-                                          str(result[0]))
-        sorted_list = result[1]
-        printSortResults(result[1], showsize)
+        ainicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
+        afinal = input('Indique la fecha final de las obras que desea consultar en el formato AAAA-MM-DD: ')
+
+        result = controller.sortArtworks(catalog, sizeArtworks, ainicial, afinal)
+        print('El moma adquirio en este periodo un total de ' + str(result[2])+ ' obras unicas')
+        print('De estas obras 0' + str(result[3]) + ' fueron compradas.' )
+        print('Los primeros y ultimas 3 obras de la lista ordenada en el periodo mencionado son: ')
+        printSortedResults(result[1])
+
+    elif int(inputs[0]) == 4:
+
+        a=1
+
+    elif int(inputs[0]) == 5:
+
+        a=1
+
+    elif int(inputs[0]) == 6:
+
+        a=1
+
+    elif int(inputs[0]) == 7:
+
+        a=1
+        
 
     else:
         sys.exit(0)

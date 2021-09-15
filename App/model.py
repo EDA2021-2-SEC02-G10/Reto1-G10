@@ -24,15 +24,13 @@
  * Dario Correal - Version inicial
  """
 
-from DISClib.DataStructures.arraylist import size
+from DISClib.DataStructures.arraylist import getElement, size
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.Algorithms.Sorting import shellsort as sa
-from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import mergesort as ms
-from DISClib.Algorithms.Sorting import quicksort as qs
 assert cf
 import time
+from datetime import datetime
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá 
@@ -43,84 +41,171 @@ los mismos.
 # Construccion de modelos
 
 
-def newCatalog(type1, type2):
+def newCatalog():
     """
 
     """
     catalog = {'artworks': None,
                'artists': None}
 
-    catalog['artworks'] = lt.newList(type1)
-    catalog['artists'] = lt.newList(type2)
+    catalog['artworks'] = lt.newList('ARRAY_LIST', cmpfunction=compareArtworks)
+    catalog['artists'] = lt.newList('ARRAY_LIST', cmpfunction=compareArtists)
 
     return catalog
 
 
 # Funciones para agregar informacion al catalogo
 
-def addArtwork(catalog, title, dateAcquired):
+def addArtwork(catalog, title, dateAcquired, lstmedium, dimensions, lstconstituentid, objectid, creditline):
 
     dictArtwork = newArtwork(title)
     dictArtwork['DateAcquired'] = dateAcquired
+    dictArtwork['Dimensions'] = dimensions
+    dictArtwork['Medium'] = lstmedium
+    dictArtwork['ObjectID'] = objectid
+    dictArtwork['ArtistsID'] = lstconstituentid
+    dictArtwork['CreditLine'] = creditline
     lt.addLast(catalog['artworks'], dictArtwork)
 
+    for cID in lstconstituentid:
+        addArtist(catalog, cID, dictArtwork)
 
-def addArtist(catalog, artist):
 
-    if artist not in catalog['artists']:
-        lt.addLast(catalog['artists'], artist)
+def addArtist(catalog, constituentid, artwork):
+
+    artists = catalog['artists']
+    posartist = lt.isPresent(artists, constituentid)
+    if posartist > 0:
+        artist = lt.getElement(artists, posartist)
     else:
-        pass
+        artist = newArtist(constituentid)
+        lt.addLast(catalog['artists'], artist)
+    lt.addLast(artist['artworks'], artwork)
+
+
+def addInfoArtist(catalog, name, constituentid):
+
+    posartists = lt.isPresent(catalog['artists'], constituentid)
+    if posartists > 0:
+        artist = lt.getElement(catalog['artists'], posartists)
+        artist['name'] = name
+    else:
+        dictArtist = newArtist(constituentid)
+        dictArtist['name'] = name
+
+    posartwork = lt.isPresent(catalog['artworks'], constituentid)
+    if posartwork > 0:
+        artwork = lt.getElement(catalog['artworks'], posartwork)
+        artwork['Artists'].append(name)
+    
+    
+
+            
+        
 
 
 # Funciones para creacion de datos
 
-def newArtist(name):  
+def newArtist(constituentid):
 
-    artist = {'name': "", "artworks": None}
-    artist['name'] = name
-    artist['artworks'] = lt.newList()
+    artist = {'name': "", 'ConstituentID': "", "artworks": None}
+    artist['ConstituentID'] = constituentid
+    artist['artworks'] = lt.newList('ARRAY_LIST')
 
     return artist
 
 
 def newArtwork(title):
-    artwork = {'Title': "", 'DateAcquired': 0, 'Artists': None}
+    artwork = {'Title': "", 'DateAcquired': 0, 'ArtistsID': None, 'Medium': None,
+               'Dimensions': "", 'ObjectID': 0, "CreditLine": "", "Artists": []}
     artwork['Title'] = title
-    artwork['Artists'] = lt.newList()
 
     return artwork
 
 
 # Funciones de consulta
 
-def sortArtworks(catalog, ltsize, sortType):
+def sortArtworks(catalog, ltsize, a1, a2):
+
+    dt_objectI1 = datetime.strptime(a1, '%Y-%m-%d').date()
+    dt_objectI2 = datetime.strptime(a2, '%Y-%m-%d').date()
     sub_list = lt.subList(catalog['artworks'], 1, ltsize)
     sub_list = sub_list.copy()
     start_time = time.process_time()
     sorted_list = None
-    if sortType == 1:
-        sorted_list = ins.sort(sub_list, cmpArtworkByDateAcquired)
-    elif sortType == 2:
-        sorted_list = sa.sort(sub_list, cmpArtworkByDateAcquired)
-    elif sortType == 3:
-        sorted_list = ms.sort(sub_list, cmpArtworkByDateAcquired)
-    elif sortType == 4:
-        sorted_list = qs.sort(sub_list, cmpArtworkByDateAcquired)
+    sorted_list = ms.sort(sub_list, cmpArtworkByDateAcquired)
+    listFinal = []
+    purchasedArtworks = 0
+    totalArtworks = 0
+    for value in lt.iterator(sorted_list):
+        if len(value['DateAcquired']) > 1:
+            dt_object1 = datetime.strptime(value['DateAcquired'], '%Y-%m-%d').date()
+            if ((dt_object1 > dt_objectI1) and (dt_object1 < dt_objectI2)):
+                listFinal.append(value)
+                totalArtworks += 1
+                if 'Purchase' in value['CreditLine']:
+                    purchasedArtworks += 1
+            else:
+                pass
+
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
+
+    return elapsed_time_mseg, listFinal, totalArtworks, purchasedArtworks
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
+
+def compareArtists(artistid1, artist):
+    if artistid1 == artist['ConstituentID']:
+        return 0
+    return -1
+
+
+def compareArtworks(artworkid, artwork):
+    if artworkid in artwork['ArtistsID']:
+        return 0
+    return -1
+
+
 # Funciones de ordenamiento
+
 
 def cmpArtworkByDateAcquired(artwork1, artwork2):
     """ Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de artwork2
         Args:
             artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
             artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
+    """
+    date1 = artwork1['DateAcquired']
+    date2 = artwork2['DateAcquired']
+    date1l = artwork1['DateAcquired'].split("-")
+    date2l = artwork2['DateAcquired'].split("-")
+    r = None
+    if (len(date1l) > 1) and (len(date2l) > 1):
+        dt_object1 = datetime.strptime(date1, '%Y-%m-%d').date()
+        dt_object2 = datetime.strptime(date2, '%Y-%m-%d').date()
+        if dt_object1 < dt_object2:
+            r = True
+        else:
+            r = False
+
+    return r
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     """
     date1 = artwork1['DateAcquired'].split("-")
     date2 = artwork2['DateAcquired'].split("-")
@@ -141,5 +226,20 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
 
     return r
 
+    date1 = artwork1['DateAcquired']
+    date2 = artwork2['DateAcquired']
+    r = None
+    dt_object1 = datetime.strptime(date1, '%Y-%d-%m').date()
+    dt_object2 = datetime.strptime(date2, '%Y-%d-%m').date()
+    dt_objectI1 = datetime.strptime(a1, '%Y-%m-%d').date()
+    dt_objectI2 = datetime.strptime(a2, '%Y-%m-%d').date()
+    if ((dt_object1 >= dt_objectI1 and dt_object2 >= dt_objectI1) and (dt_object1 <= dt_objectI2 and dt_object2 <= dt_objectI2)):
+        if dt_object1 < dt_object2:
+            r = True
+        else:
+            r = False
 
+    return r
+
+    """
 
