@@ -56,7 +56,8 @@ def loadArtworks(catalog):
     for row in input_file:
         lstid = (row['ConstituentID'][1:-1]).split(", ")
         lstmedium = row['Medium'].split(",")
-        model.addArtwork(catalog, row['Title'], row['DateAcquired'], lstmedium, row['Dimensions'], lstid, row['ObjectID'], row['CreditLine'])
+        model.addArtwork(catalog, row['Title'], row['DateAcquired'], lstmedium,
+                         row['Dimensions'], lstid, row['ObjectID'], row['CreditLine'], row['Date'])
 
 
 def loadArtists(catalog):
@@ -64,7 +65,7 @@ def loadArtists(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for row in input_file:
-        model.addInfoArtist(catalog, row['DisplayName'], row['ConstituentID'])
+        model.addInfoArtist(catalog, row['DisplayName'], row['ConstituentID'], row['Nationality'])
 
 
 # Funciones de ordenamiento
@@ -74,3 +75,8 @@ def loadArtists(catalog):
 def sortArtworks(catalog, lstsize, a1, a2):
 
     return model.sortArtworks(catalog, lstsize, a1, a2)
+
+
+def countArtworksNationality(catalog):
+
+    return model.countArtworksNationality(catalog)
