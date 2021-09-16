@@ -132,7 +132,6 @@ def sortArtworks(catalog, ltsize, a1, a2):
     start_time = time.process_time()
     sorted_list = None
     sorted_list = ms.sort(sub_list, cmpArtworkByDateAcquired)
-    print(sorted_list)
     listFinal = []
     purchasedArtworks = 0
     totalArtworks = 0
@@ -179,7 +178,7 @@ def countArtworksNationality(catalog):
                 dictTF[key] = value
                 lt.addLast(lstf, dictTF)
 
-    #DATOS DE LAS OBRAS DEL TOP 1
+    # DATOS DE LAS OBRAS DEL TOP 1
 
     key_list = list(lstf['elements'][0])
     topCountry = key_list[0]
@@ -191,15 +190,16 @@ def countArtworksNationality(catalog):
 
     listData = lt.newList('ARRAY_LIST')
     for value in lt.iterator(catalog['artworks']):
-        dictData = {}
-        for i in value['Artists']:
-            if i in lstTopCountryArtists:
+        for i in range(len(value['Artists'])):
+            dictData = {}
+            if value['Artists'][i] in lstTopCountryArtists:
                 dictData['Title'] = value['Title']
                 dictData['Artists'] = value['Artists']
                 dictData['Date'] = value['Date']
                 dictData['Medium'] = value['Medium']
                 dictData['Dimensions'] = value['Dimensions']
                 lt.addLast(listData, dictData)
+                break
 
     return lstf, listData
 
@@ -228,7 +228,33 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
             artwork1: informacion de la primera obra que incluye su valor 'DateAcquired' 
             artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired' 
     """
-    
+    date1 = artwork1['DateAcquired'].split("-")
+    date2 = artwork2['DateAcquired'].split("-")
+    r = None
+    if (len(date1) < 2):
+        date1 = [2021, 10, 20]
+        artwork1['DateAcquired'] = '2021-10-02'
+    if (len(date2)) < 2:
+        date2 = [2021, 10, 20]
+        artwork2['DateAcquired'] = '2021-10-02'
+
+    if int(date1[0]) < int(date2[0]):
+        r = True
+    elif int(date1[0]) > int(date2[0]):
+        r = False
+    elif int(date1[1]) < int(date2[1]):
+        r = True
+    elif int(date1[1]) > int(date2[1]):
+        r = False
+    elif int(date1[2]) < int(date2[2]):
+        r = True
+    elif int(date1[2]) > int(date2[2]):
+        r = False
+
+    return r
+
+
+    """
     date1 = artwork1['DateAcquired']
     date2 = artwork2['DateAcquired']
     date1l = artwork1['DateAcquired'].split("-")
@@ -243,7 +269,7 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
             r = False
 
     return r
-
+    """
 
 def cmpCountriesbyArtworks(country1, country2):
 

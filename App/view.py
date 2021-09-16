@@ -49,7 +49,7 @@ def printSortedResults(ordlst):
 
     size = len(ordlst)
 
-    for i in range(3):
+    for i in range(1,4):
         titlef = ordlst[i]['Title']
         nameArtistf = ordlst[i]['Artists']
         datef = ordlst[i]['DateAcquired']
@@ -72,14 +72,21 @@ def printArtworksbyNationality(result):
 
     final_list = lt.subList(result[0], 1, 10)
 
-    firstDatalst = [result[1]['elements'][1], result[1]['elements'][2], result[1]['elements'][3]]
+    firstDatalst = [result[1]['elements'][0], result[1]['elements'][1], result[1]['elements'][2]]
     lastDatalst = [result[1]['elements'][-1], result[1]['elements'][-2], result[1]['elements'][-3]]
 
+
+    print('En base al numero de obras en el MoMA por pais, ')
+    print('Los TOP 10 paises en el MoMA son : ')
     print(final_list)
     print('Las primeras 3 obras de la lista del pais TOP 1 son: ')
-    print(firstDatalst)
+    print(firstDatalst[0])
+    print(firstDatalst[1])
+    print(firstDatalst[2])
     print('Las ultimas 3 obras de la lista del pais TOP 1 son: ')
-    print(lastDatalst)
+    print(lastDatalst[0])
+    print(lastDatalst[1])
+    print(lastDatalst[2])
 
 
 def printMenu():
@@ -134,9 +141,7 @@ while True:
 
         result = controller.countArtworksNationality(catalog)
 
-        print('En base al numero de obras en el MoMA por pais, ')
-        print('Los TOP 10 paises en el MoMA son : ')
-        print(printArtworksbyNationality(result))
+        printArtworksbyNationality(result)
 
     elif int(inputs[0]) == 6:
 
