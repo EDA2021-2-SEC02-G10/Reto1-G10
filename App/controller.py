@@ -65,7 +65,7 @@ def loadArtists(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for row in input_file:
-        model.addInfoArtist(catalog, row['DisplayName'], row['ConstituentID'], row['Nationality'])
+        model.addInfoArtist(catalog, row['DisplayName'], row['ConstituentID'], row['Nationality'], row['BeginDate'], row['EndDate'],row['Gender'])
 
 
 # Funciones de ordenamiento
@@ -75,6 +75,9 @@ def loadArtists(catalog):
 def sortArtworks(catalog, lstsize, a1, a2):
 
     return model.sortArtworks(catalog, lstsize, a1, a2)
+
+def sortArtists(catalog,lstsize,a1,a2):
+    return model.sortArtists(catalog,lstsize,a1,a2)
 
 
 def countArtworksNationality(catalog):

@@ -84,17 +84,24 @@ def addArtist(catalog, constituentid, artwork):
     lt.addLast(artist['artworks'], artwork)
 
 
-def addInfoArtist(catalog, name, constituentid, nationality):
+def addInfoArtist(catalog, name, constituentid, nationality, begindate,enddate,gender):
 
     posartists = lt.isPresent(catalog['artists'], constituentid)
     if posartists > 0:
         artist = lt.getElement(catalog['artists'], posartists)
         artist['name'] = name
         artist['Nationality'] = nationality
+        artist['BeginDate'] = begindate
+        artist['EndDate'] = enddate
+        artist['Gender'] = gender
+
     else:
         dictArtist = newArtist(constituentid)
         dictArtist['name'] = name
         dictArtist['Nationality'] = nationality
+        dictArtist['BeginDate'] = begindate
+        dictArtist['EndDate'] = enddate
+        dictArtist['Gender'] = gender
 
     posartwork = lt.isPresent(catalog['artworks'], constituentid)
     if posartwork > 0:
@@ -106,7 +113,7 @@ def addInfoArtist(catalog, name, constituentid, nationality):
 
 def newArtist(constituentid):
 
-    artist = {'name': "", 'ConstituentID': "", 'Nationality': "", "artworks": None,}
+    artist = {'name': "", 'ConstituentID': "", 'Nationality': "", "artworks": None,'BeginDate':0, 'EndDate':0,'Gender':""}
     artist['ConstituentID'] = constituentid
     artist['artworks'] = lt.newList('ARRAY_LIST')
 
@@ -138,7 +145,7 @@ def sortArtworks(catalog, ltsize, a1, a2):
     for value in lt.iterator(sorted_list):
         if len(value['DateAcquired']) > 1:
             dt_object1 = datetime.strptime(value['DateAcquired'], '%Y-%m-%d').date()
-            if ((dt_object1 > dt_objectI1) and (dt_object1 < dt_objectI2)):
+            if ((dt_object1 >= dt_objectI1) and (dt_object1 <= dt_objectI2)):
                 listFinal.append(value)
                 totalArtworks += 1
                 if 'Purchase' in value['CreditLine']:
@@ -151,6 +158,26 @@ def sortArtworks(catalog, ltsize, a1, a2):
 
     return elapsed_time_mseg, listFinal, totalArtworks, purchasedArtworks
 
+def sortArtists(catalog,ltsize,a1,a2):
+    sub_list = lt.subList(catalog['artists'],1,ltsize)
+    sub_list = sub_list.copy()
+    start_time = time.process_time()
+    sorted_list = None
+    sorted_list = ms.sort(sub_list,cmpArtistbyBirthDate)
+    listFinal=[]
+    totalArtists=0
+    for value in lt.iterator(sorted_list):
+        if (int(value['BeginDate']))>1:
+            año1=int(value['BeginDate'])
+            if ((año1 >= a1) and (año1 <= a2)):
+                listFinal.append(value)
+                totalArtists += 1
+            else:
+                pass
+    stop_time=time.process_time()
+    elapsed_time=(stop_time-start_time)*1000
+
+    return elapsed_time,listFinal,totalArtists
 
 def countArtworksNationality(catalog):
 
@@ -281,4 +308,13 @@ def cmpCountriesbyArtworks(country1, country2):
 
     return r
 
+def cmpArtistbyBirthDate (date1,date2):
+    birth1 = int(date1['BeginDate'])
+    birth2 = int(date2['BeginDate'])
+    r = None
 
+    if birth1>birth2:
+        r=True
+    else:
+        r=False
+    return r

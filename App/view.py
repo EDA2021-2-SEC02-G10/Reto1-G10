@@ -66,7 +66,31 @@ def printSortedResults(ordlst):
 
         print(idict)
         print(fdict)
+def PrintArtistsSortedbyBirthdate(lista):
+    for i in range (0,3):
+        artistnamei = lista[-i]['name']
+        birthdatei = lista[-i]['BeginDate']
+        xi= lista[-i]['EndDate']
+        if xi == 0:
+            deathdatei = " "
+        else:
+            deathdatei = lista[-i]['EndDate']
+        nacionalityi = lista[-i]['Nationality']
+        genderi = lista[-i]['Gender']
+        idict ={'Name': artistnamei, 'Birth Date': birthdatei, 'Death Date': deathdatei, 'Nationality': nacionalityi, 'Gender': genderi} 
 
+        artistnamef = lista[i]['name']
+        birthdatef = lista[i]['BeginDate']
+        xf= int(lista[i]['EndDate'])
+        if xf == 0:
+            deathdatef = " "
+        else:
+            deathdatef = lista[i]['EndDate']
+        nacionalityf = lista[i]['Nationality']
+        genderf = lista[i]['Gender']
+        fdict ={'Name': artistnamef, 'Birth Date': birthdatef, 'Death Date': deathdatef, 'Nationality': nacionalityf, 'Gender': genderf} 
+        print (idict)
+        print(fdict)
 
 def printArtworksbyNationality(result):
 
@@ -120,8 +144,13 @@ while True:
         print(lt.getElement(catalog["artworks"], 2))
 
     elif int(inputs[0]) == 2:
+        ainicial=int(input('Indique el año inicial de nacimiento de los artistas que desea consultar en formato YYYY:  '))
+        afinal= int(input ('Indique el año final de nacimiento de los artistas que desea consultar en formato YYYY: '))
+        result = controller.sortArtists(catalog, sizeArtists, ainicial,afinal)
+        print('En total hay '+ str(result[2])+' artistas que nacieron entre '+str(ainicial)+' y ' + str(afinal))
+        PrintArtistsSortedbyBirthdate(result[1])
 
-        a=1
+        
                      
     elif int(inputs[0]) == 3:
         ainicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
