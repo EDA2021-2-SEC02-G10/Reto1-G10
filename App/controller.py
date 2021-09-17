@@ -56,8 +56,17 @@ def loadArtworks(catalog):
     for row in input_file:
         lstid = (row['ConstituentID'][1:-1]).split(", ")
         lstmedium = row['Medium'].split(",")
+        if row['Height (cm)'] == '':
+            height = 0
+        else:
+            height = float(row['Height (cm)'])
+        if row['Width (cm)'] == '':
+            width = 0
+        else:
+            width = float(row['Width (cm)'])
         model.addArtwork(catalog, row['Title'], row['DateAcquired'], lstmedium,
-                         row['Dimensions'], lstid, row['ObjectID'], row['CreditLine'], row['Date'])
+                         row['Dimensions'], lstid, row['ObjectID'], row['CreditLine'], row['Date'],
+                         row['Classification'], height, width)
 
 
 def loadArtists(catalog):
@@ -76,10 +85,17 @@ def sortArtworks(catalog, lstsize, a1, a2):
 
     return model.sortArtworks(catalog, lstsize, a1, a2)
 
-def sortArtists(catalog,lstsize,a1,a2):
-    return model.sortArtists(catalog,lstsize,a1,a2)
+
+def sortArtists(catalog, lstsize, a1, a2):
+    return model.sortArtists(catalog, lstsize, a1, a2)
 
 
 def countArtworksNationality(catalog):
 
     return model.countArtworksNationality(catalog)
+
+
+def createNewDisplay(catalog, a1, a2, area):
+
+    return model.createNewDisplay(catalog, a1, a2, area)
+

@@ -66,6 +66,24 @@ def printSortedResults(ordlst):
 
         print(idict)
         print(fdict)
+
+def printNewDisplay(lstExpo, area):
+
+    firstDataLst = [result[0]['elements'][0], result[0]['elements'][1], result[0]['elements'][2]]
+    LastDataLst = [result[0]['elements'][-1], result[0]['elements'][-2], result[0]['elements'][-3]]
+
+    print('El area ocupada por la nueva exposicion es de: ')
+    print(str(area) + str('m^2'))
+    print('La nueva exposicion estara compuesta de: ' + str(lt.size(lstExpo)) + str(' obras'))
+    print('Las primeras 3 obras de la nueva exposicion son : ')
+    print(firstDataLst[0])
+    print(firstDataLst[1])
+    print(firstDataLst[2])
+    print('Las ultimas 3 obras de la nueva exposicion son: ')
+    print(LastDataLst[0])
+    print(LastDataLst[1])
+    print(LastDataLst[2])
+
 def PrintArtistsSortedbyBirthdate(lista):
     for i in range (0,3):
         artistnamei = lista[-i]['name']
@@ -92,13 +110,13 @@ def PrintArtistsSortedbyBirthdate(lista):
         print (idict)
         print(fdict)
 
+
 def printArtworksbyNationality(result):
 
     final_list = lt.subList(result[0], 1, 10)
 
     firstDatalst = [result[1]['elements'][0], result[1]['elements'][1], result[1]['elements'][2]]
     lastDatalst = [result[1]['elements'][-1], result[1]['elements'][-2], result[1]['elements'][-3]]
-
 
     print('En base al numero de obras en el MoMA por pais, ')
     print('Los TOP 10 paises en el MoMA son : ')
@@ -153,10 +171,10 @@ while True:
         
                      
     elif int(inputs[0]) == 3:
-        ainicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
+        aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
         afinal = input('Indique la fecha final de las obras que desea consultar en el formato AAAA-MM-DD: ')
 
-        result = controller.sortArtworks(catalog, sizeArtworks, ainicial, afinal)
+        result = controller.sortArtworks(catalog, sizeArtworks, aninicial, afinal)
         print('El moma adquirio en este periodo un total de ' + str(result[2])+ ' obras unicas')
         print('De estas obras 0' + str(result[3]) + ' fueron compradas.' )
         print('Los primeros y ultimas 3 obras de la lista ordenada en el periodo mencionado son: ')
@@ -164,7 +182,7 @@ while True:
 
     elif int(inputs[0]) == 4:
 
-        a=1
+        a = 1
 
     elif int(inputs[0]) == 5:
 
@@ -178,8 +196,12 @@ while True:
 
     elif int(inputs[0]) == 7:
 
-        a=1
-        
+        a_inicial = input('Digite el año inicial de las obras que desea exponer: ')
+        a_final = input('Digite el año final de las obras que desea exponer: ')
+        area = float(input('Area disponible para la exposicion en m^2: '))
+
+        result = controller.createNewDisplay(catalog, a_inicial, a_final, area)
+        printNewDisplay(result[0], result[1])
 
     else:
         sys.exit(0)

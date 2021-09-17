@@ -56,7 +56,8 @@ def newCatalog():
 
 # Funciones para agregar informacion al catalogo
 
-def addArtwork(catalog, title, dateAcquired, lstmedium, dimensions, lstconstituentid, objectid, creditline, date):
+def addArtwork(catalog, title, dateAcquired, lstmedium, dimensions, lstconstituentid,
+               objectid, creditline, date, classification, height, width):
 
     dictArtwork = newArtwork(title)
     dictArtwork['DateAcquired'] = dateAcquired
@@ -66,6 +67,9 @@ def addArtwork(catalog, title, dateAcquired, lstmedium, dimensions, lstconstitue
     dictArtwork['ArtistsID'] = lstconstituentid
     dictArtwork['CreditLine'] = creditline
     dictArtwork['Date'] = date
+    dictArtwork['Classification'] = classification
+    dictArtwork['Height (cm)'] = height
+    dictArtwork['Width (cm)'] = width
     lt.addLast(catalog['artworks'], dictArtwork)
 
     for cID in lstconstituentid:
@@ -122,7 +126,8 @@ def newArtist(constituentid):
 
 def newArtwork(title):
     artwork = {'Title': "", 'DateAcquired': 0, 'ArtistsID': None, 'Medium': None,
-               'Dimensions': "", 'ObjectID': 0, "CreditLine": "", "Artists": [], 'Date': ""}
+               'Dimensions': "", 'ObjectID': 0, "CreditLine": "", "Artists": [], 'Date': "",
+               'Classification': "", 'Height (cm)': 0, 'Width (cm)': 0}
     artwork['Title'] = title
 
     return artwork
@@ -179,6 +184,7 @@ def sortArtists(catalog,ltsize,a1,a2):
 
     return elapsed_time,listFinal,totalArtists
 
+
 def countArtworksNationality(catalog):
 
     dictFinal = {}
@@ -190,7 +196,7 @@ def countArtworksNationality(catalog):
                 dictFinal[artist['Nationality']] += lt.size(artist['artworks'])
 
     lst = lt.newList('ARRAY_LIST')
-    lstf= lt.newList('ARRAY_LIST')
+    lstf = lt.newList('ARRAY_LIST')
     for key in dictFinal:
         dictT = {}
         dictT[key] = dictFinal[key]
@@ -230,6 +236,39 @@ def countArtworksNationality(catalog):
 
     return lstf, listData
 
+
+def createNewDisplay(catalog, a1, a2, area):
+
+    lstValidArtworks = lt.newList('ARRAY_LIST')
+    for artwork in lt.iterator(catalog['artworks']):
+        dictInfo = {}
+        if ((artwork['Date'] >= a1) and (artwork['Date'] <= a2) and (artwork['Classification'] == 'Painting'
+             or artwork['Classification'] == 'Photograph'or artwork['Classification'] == 'Print' or artwork['Classification'] == 'Drawing')):
+            height = (artwork['Height (cm)'])/100
+            width = (artwork['Width (cm)'])/100
+            areaArtwork = height*width
+            dictInfo['Title'] = artwork['Title']
+            dictInfo['Artists'] = artwork['Artists']
+            dictInfo['Date'] = artwork['Date']
+            dictInfo['Classification'] = artwork['Classification']
+            dictInfo['Medium'] = artwork['Medium']
+            dictInfo['Dimensions'] = artwork['Dimensions']
+            dictInfo['Area'] = areaArtwork
+            lt.addLast(lstValidArtworks, dictInfo)
+
+    areaTemp = 0
+    lstExpo = lt.newList('ARRAY_LIST')
+    for validArtwork in lt.iterator(lstValidArtworks):
+        lt.addLast(lstExpo, validArtwork)
+        areaTemp += validArtwork['Area']
+        if areaTemp >= area:
+            areaTempF = areaTemp-validArtwork['Area']
+            break
+        else:
+            areaTempF = areaTemp
+    lt.removeLast(lstExpo)
+
+    return lstExpo, areaTempF
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -281,23 +320,6 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     return r
 
 
-    """
-    date1 = artwork1['DateAcquired']
-    date2 = artwork2['DateAcquired']
-    date1l = artwork1['DateAcquired'].split("-")
-    date2l = artwork2['DateAcquired'].split("-")
-    r = None
-    if (len(date1l) > 1) and (len(date2l) > 1):
-        dt_object1 = datetime.strptime(date1, '%Y-%m-%d').date()
-        dt_object2 = datetime.strptime(date2, '%Y-%m-%d').date()
-        if dt_object1 < dt_object2:
-            r = True
-        else:
-            r = False
-
-    return r
-    """
-
 def cmpCountriesbyArtworks(country1, country2):
 
     r = None
@@ -308,13 +330,14 @@ def cmpCountriesbyArtworks(country1, country2):
 
     return r
 
-def cmpArtistbyBirthDate (date1,date2):
+
+def cmpArtistbyBirthDate(date1, date2):
     birth1 = int(date1['BeginDate'])
     birth2 = int(date2['BeginDate'])
     r = None
 
-    if birth1>birth2:
-        r=True
+    if birth1 > birth2:
+        r = True
     else:
-        r=False
+        r = False
     return r
