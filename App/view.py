@@ -85,17 +85,17 @@ def printNewDisplay(lstExpo, area):
     print(LastDataLst[2])
 
 def PrintArtistsSortedbyBirthdate(lista):
-    for i in range (0,3):
+    for i in range (1,4):
         artistnamei = lista[-i]['name']
         birthdatei = lista[-i]['BeginDate']
         xi= lista[-i]['EndDate']
-        if xi == 0:
+        if xi == 0 or xi== '0':
             deathdatei = " "
         else:
             deathdatei = lista[-i]['EndDate']
         nacionalityi = lista[-i]['Nationality']
         genderi = lista[-i]['Gender']
-        idict ={'Name': artistnamei, 'Birth Date': birthdatei, 'Death Date': deathdatei, 'Nationality': nacionalityi, 'Gender': genderi} 
+        idict ={'Name': artistnamei, 'Birth Date': birthdatei, 'Death Date': deathdatei, 'Nationality': nacionalityi, 'Gender': genderi}
 
         artistnamef = lista[i]['name']
         birthdatef = lista[i]['BeginDate']
@@ -108,8 +108,7 @@ def PrintArtistsSortedbyBirthdate(lista):
         genderf = lista[i]['Gender']
         fdict ={'Name': artistnamef, 'Birth Date': birthdatef, 'Death Date': deathdatef, 'Nationality': nacionalityf, 'Gender': genderf} 
         print (idict)
-        print(fdict)
-
+        print (fdict)
 
 def printArtworksbyNationality(result):
 
@@ -165,10 +164,8 @@ while True:
         ainicial=int(input('Indique el año inicial de nacimiento de los artistas que desea consultar en formato YYYY:  '))
         afinal= int(input ('Indique el año final de nacimiento de los artistas que desea consultar en formato YYYY: '))
         result = controller.sortArtists(catalog, sizeArtists, ainicial,afinal)
-        print('En total hay '+ str(result[2])+' artistas que nacieron entre '+str(ainicial)+' y ' + str(afinal))
-        PrintArtistsSortedbyBirthdate(result[1])
-
-        
+        print('En total hay '+ str(result[1])+' artistas que nacieron entre '+str(ainicial)+' y ' + str(afinal))
+        PrintArtistsSortedbyBirthdate(result[0])  
                      
     elif int(inputs[0]) == 3:
         aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
@@ -183,7 +180,11 @@ while True:
     elif int(inputs[0]) == 4:
         nombreartista = str(input ('Indique el nombre del artista al que le desea clasificar sus obras: '))
         result = controller.ClassifyArtworksbyTechnique (catalog,nombreartista)
-        print (result)
+        print (nombreartista + ' tiene ' + str(result[0]) + ' obras a su nombre en el museo.')
+        print ('Él/Ella utilizó ' + str(result[1]) + ' técnicas diferentes en sus obras')
+        print ('Su técnica más usada es ' + result[2])
+        print('Las obras que ' + nombreartista + ' pintó usando está técnica son: ')
+        print (result[3])
 
     elif int(inputs[0]) == 5:
 

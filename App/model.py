@@ -184,26 +184,63 @@ def ClassifyArtworksbyTechnique (catalog, artist):
     total_obras = 0
     total_medios = 0
     lista_medios = lt.newList('ARRAY_LIST')
+    dictFinal ={}
     for artwork in lt.iterator (catalog['artworks']):
-        artistID=artwork['ArtistsID']
-        for name in artistID:
-            IDFinal = name
+        for name in artwork['ArtistsID']:
             for artista in lt.iterator (catalog['artists']):
                 if artista['name'] == artist:
-                    if artista['ConstituentID']==IDFinal:
+                    if artista['ConstituentID']==name:
                         total_obras += 1
-                        IDartista = IDFinal
-                        Medium = artwork['Medium']
-                        for x in Medium:
+                        for x in artwork['Medium']:
                             lt.addLast(lista_medios,x)
+                        if (len(artwork['Medium'])) > 0:
+                            if x not in dictFinal:
+                                dictFinal[x] = 1
+                            else:
+                                dictFinal[x] += 1
 
     lista_sin_repetidos = set(lista_medios['elements'])
     total_medios = len(lista_sin_repetidos)
+    lista1 = lt.newList('ARRAY_LIST')
+    lista2 = lt.newList('ARRAY_LIST')
+    for key in dictFinal:
+        dictT = {}
+        dictT[key] = dictFinal[key]
+        lt.addLast(lista1, dictT[key])
+    sorted_list = None
+    sorted_list = ms.sort(lista1, cmpCountriesbyArtworks)
+    for value in lt.iterator(sorted_list):
+        for key in dictFinal:
+            dictTF = {}
+            if value == dictFinal[key]:
+                dictTF[key] = value
+                lt.addLast(lista2, dictTF)
 
+    key_list = list(lista2['elements'][0])
+    Most_used_technique = key_list[0]
+    lista_titulos = []
+    for artwork in lt.iterator (catalog['artworks']):
+        for name in artwork['ArtistsID']:
+            for artista in lt.iterator (catalog['artists']):
+                if artista['name'] == artist:
+                    if artista['ConstituentID']==name:
+                        for x in artwork['Medium']:
+                            if x == Most_used_technique:
+                                lista_titulos.append(artwork['Title'])
+
+    lista_final = lt.newList('ARRAY_LIST')
+    for x in lt.iterator(catalog['artworks']):
+        if x['Title'] in lista_titulos and  Most_used_technique in x['Medium']:
+            dictObras={}
+            dictObras['Título'] = x['Title']
+            dictObras['Fecha'] = x['Date']
+            dictObras['Medio'] = x['Medium']
+            dictObras['Dimensiones'] = x['Dimensions']
+            lt.addLast(lista_final,dictObras)
+
+    return (total_obras, total_medios, Most_used_technique,lista_final)
     
 
-    
-                
 
 def countArtworksNationality(catalog):
 
@@ -357,6 +394,14 @@ def cmpArtistbyBirthDate(date1, date2):
     r = None
 
     if birth1 > birth2:
+        r = True
+    else:
+        r = False
+    return r
+
+def cmpArtistbyTachnique (Medium1, Medium2):
+    r = None
+    if Medium1 > Medium2:
         r = True
     else:
         r = False
