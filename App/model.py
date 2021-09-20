@@ -226,6 +226,31 @@ def ClassifyArtworksbyTechnique (catalog, artist):
                 dictTF[key] = value
                 lt.addLast(lista2, dictTF)
 
+    key_list = list(lista2['elements'][0])
+    Most_used_technique = key_list[0]
+    lista_titulos = []
+    for artwork in lt.iterator (catalog['artworks']):
+        for name in artwork['ArtistsID']:
+            for artista in lt.iterator (catalog['artists']):
+                if artista['name'] == artist:
+                    if artista['ConstituentID']==name:
+                        for x in artwork['Medium']:
+                            if x == Most_used_technique:
+                                lista_titulos.append(artwork['Title'])
+
+    lista_final = lt.newList('ARRAY_LIST')
+    for x in lt.iterator(catalog['artworks']):
+        if x['Title'] in lista_titulos and  Most_used_technique in x['Medium']:
+            dictObras={}
+            dictObras['Título'] = x['Title']
+            dictObras['Fecha'] = x['Date']
+            dictObras['Medio'] = x['Medium']
+            dictObras['Dimensiones'] = x['Dimensions']
+            lt.addLast(lista_final,dictObras)
+
+    return (total_obras, total_medios, Most_used_technique,lista_final)
+    
+
 
 def countArtworksNationality(catalog):
 
