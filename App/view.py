@@ -171,8 +171,8 @@ while True:
         
                      
     elif int(inputs[0]) == 3:
-        aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
-        afinal = input('Indique la fecha final de las obras que desea consultar en el formato AAAA-MM-DD: ')
+        aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD (con los numeros menores a 10 como 01, 02, etc): ')
+        afinal = input('Indique la fecha final de las obras que desea consultar en el formato AAAA-MM-DD (con los numeros menores a 10 como 01, 02, etc): ')
 
         result = controller.sortArtworks(catalog, sizeArtworks, aninicial, afinal)
         print('El moma adquirio en este periodo un total de ' + str(result[2])+ ' obras unicas')
