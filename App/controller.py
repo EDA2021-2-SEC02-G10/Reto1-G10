@@ -64,9 +64,18 @@ def loadArtworks(catalog):
             width = 0
         else:
             width = float(row['Width (cm)'])
+        if row['Length (cm)'] == '':
+            length = 0
+        else:
+            length = float(row['Width (cm)'])
+        if row['Weight (kg)'] == '':
+            weight = 0
+        else:
+            weight = float(row['Weight (kg)'])
+
         model.addArtwork(catalog, row['Title'], row['DateAcquired'], lstmedium,
                          row['Dimensions'], lstid, row['ObjectID'], row['CreditLine'], row['Date'],
-                         row['Classification'], height, width)
+                         row['Classification'], height, width, row['Department'], length, weight)
 
 
 def loadArtists(catalog):
@@ -81,9 +90,9 @@ def loadArtists(catalog):
 
 # Funciones de consulta sobre el catálogo
 
-def sortArtworks(catalog, lstsize, a1, a2):
+def sortArtworks(catalog, ltsize, a1, a2):
 
-    return model.sortArtworks(catalog, lstsize, a1, a2)
+    return model.sortArtworks(catalog, ltsize, a1, a2)
 
 
 def sortArtists(catalog, lstsize, a1, a2):
@@ -99,8 +108,14 @@ def createNewDisplay(catalog, a1, a2, area):
 
     return model.createNewDisplay(catalog, a1, a2, area)
 
+
 def ClassifyArtworksbyTechnique (catalog,artist):
 
     return model.ClassifyArtworksbyTechnique(catalog,artist)
-    
+
+
+def moveDepartment(catalog, department):
+
+    return model.moveDepartment(catalog, department)
+
 

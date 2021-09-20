@@ -45,32 +45,26 @@ operación solicitada
 """
 
 
-def printSortedResults(ordlst):
+def printSortedResults(result):
 
-    size = len(ordlst)
+    print(result)
+    print('En el rango dado hay: ' + str(result[1]))
+    print('De esas obras se compraron: '+ str(result[2]))
+    print('Las primeras 3 obras del rango en base a su fecha de creacion son: ')
+    print(result[0]['elements'][0])
+    print(result[0]['elements'][1])
+    print(result[0]['elements'][2])
+    print('Las ultimas 3 obras del rango en base a su fecha de creacion son: ')
+    print(result[0]['elements'][-1])
+    print(result[0]['elements'][-2])
+    print(result[0]['elements'][-3])
 
-    for i in range(1,4):
-        titlef = ordlst[i]['Title']
-        nameArtistf = ordlst[i]['Artists']
-        datef = ordlst[i]['DateAcquired']
-        mediumf = ordlst[i]['Medium']
-        dimensionsf = ordlst[i]['Dimensions']
-        fdict = {'Title': titlef, 'Artists': nameArtistf, 'Date': datef, 'Medium': mediumf, 'Dimensions': dimensionsf}
 
-        titlei = ordlst[-i]['Title']
-        nameArtisti = ordlst[-i]['Artists']
-        datei = ordlst[-i]['DateAcquired']
-        mediumi = ordlst[-i]['Medium']
-        dimensionsi = ordlst[-i]['Dimensions']
-        idict = {'Title': titlei, 'Artists': nameArtisti, 'Date': datei, 'Medium': mediumi, 'Dimensions': dimensionsi}
-
-        print(idict)
-        print(fdict)
 
 def printNewDisplay(lstExpo, area):
 
-    firstDataLst = [result[0]['elements'][0], result[0]['elements'][1], result[0]['elements'][2]]
-    LastDataLst = [result[0]['elements'][-1], result[0]['elements'][-2], result[0]['elements'][-3]]
+    firstDataLst = [result[0]['elements'][0], result[0]['elements'][1], result[0]['elements'][2], result[0]['elements'][3], result[0]['elements'][4]]
+    LastDataLst = [result[0]['elements'][-1], result[0]['elements'][-2], result[0]['elements'][-3], result[0]['elements'][-4], result[0]['elements'][-5]]
 
     print('El area ocupada por la nueva exposicion es de: ')
     print(str(area) + str('m^2'))
@@ -79,10 +73,16 @@ def printNewDisplay(lstExpo, area):
     print(firstDataLst[0])
     print(firstDataLst[1])
     print(firstDataLst[2])
+    print(firstDataLst[3])
+    print(firstDataLst[4])
     print('Las ultimas 3 obras de la nueva exposicion son: ')
     print(LastDataLst[0])
     print(LastDataLst[1])
     print(LastDataLst[2])
+    print(LastDataLst[3])
+    print(LastDataLst[4])
+    
+
 
 def PrintArtistsSortedbyBirthdate(lista):
     lista_F=[]
@@ -115,24 +115,49 @@ def PrintArtistsSortedbyBirthdate(lista):
             lista_F.append(fdict)
     print (lista_F)
 
+
 def printArtworksbyNationality(result):
 
     final_list = lt.subList(result[0], 1, 10)
 
-    firstDatalst = [result[1]['elements'][0], result[1]['elements'][1], result[1]['elements'][2]]
-    lastDatalst = [result[1]['elements'][-1], result[1]['elements'][-2], result[1]['elements'][-3]]
+    firstDatalst = [result[1]['elements'][0], result[1]['elements'][1], result[1]['elements'][2], result[1]['elements'][3], result[1]['elements'][4]]
+    lastDatalst = [result[1]['elements'][-1], result[1]['elements'][-2], result[1]['elements'][-3], result[1]['elements'][-4], result[1]['elements'][-5]]
 
     print('En base al numero de obras en el MoMA por pais, ')
     print('Los TOP 10 paises en el MoMA son : ')
-    print(final_list)
-    print('Las primeras 3 obras de la lista del pais TOP 1 son: ')
+    print(final_list['elements'])
+    size = lt.size(result[1])
+    print('El numero de obras en la lista de obras del pais TOP 1 es: ' + str(size))
+    print('Las primeras 5 obras de la lista del pais TOP 1 son: ')
     print(firstDatalst[0])
     print(firstDatalst[1])
     print(firstDatalst[2])
-    print('Las ultimas 3 obras de la lista del pais TOP 1 son: ')
+    print(firstDatalst[3])
+    print(firstDatalst[4])
+    print('Las ultimas 5 obras de la lista del pais TOP 1 son: ')
     print(lastDatalst[0])
     print(lastDatalst[1])
     print(lastDatalst[2])
+    print(lastDatalst[3])
+    print(lastDatalst[4])
+
+
+def printMoveDepartment(result):
+
+    print('El valor aproximado de mover todas las obras del departamento es: ' + str(result[0]))
+    print('El peso aproximado de todas las obras del departamento es: ' + str(result[1]))
+    print('Las 5 obras mas antiguas del departamento a mover son: ')
+    print(result[2]['elements'][0])
+    print(result[2]['elements'][1])
+    print(result[2]['elements'][2])
+    print(result[2]['elements'][3])
+    print(result[2]['elements'][4])
+    print('Las 5 obras mas costosas de mover son: ')
+    print(result[3]['elements'][-1])
+    print(result[3]['elements'][-2])
+    print(result[3]['elements'][-3])
+    print(result[3]['elements'][-4])
+    print(result[3]['elements'][-5])
 
 
 def printMenu():
@@ -173,14 +198,11 @@ while True:
         PrintArtistsSortedbyBirthdate(result[0])  
                      
     elif int(inputs[0]) == 3:
-        aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD: ')
-        afinal = input('Indique la fecha final de las obras que desea consultar en el formato AAAA-MM-DD: ')
+        aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD (con los numeros menores a 10 como 01, 02, etc): ')
+        afinal = input('Indique la fecha final de las obras que desea consultar en el formato AAAA-MM-DD (con los numeros menores a 10 como 01, 02, etc): ')
 
         result = controller.sortArtworks(catalog, sizeArtworks, aninicial, afinal)
-        print('El moma adquirio en este periodo un total de ' + str(result[2])+ ' obras unicas')
-        print('De estas obras 0' + str(result[3]) + ' fueron compradas.' )
-        print('Los primeros y ultimas 3 obras de la lista ordenada en el periodo mencionado son: ')
-        printSortedResults(result[1])
+        printSortedResults(result)
 
     elif int(inputs[0]) == 4:
         nombreartista = str(input ('Indique el nombre del artista al que le desea clasificar sus obras: '))
@@ -199,7 +221,9 @@ while True:
 
     elif int(inputs[0]) == 6:
 
-        a=1
+        department = input('Digite el departamento del cual desea calcular el costo del transporte: ')
+        result = controller.moveDepartment(catalog, department)
+        printMoveDepartment(result)
 
     elif int(inputs[0]) == 7:
 

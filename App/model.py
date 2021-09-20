@@ -30,7 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import mergesort as ms
 assert cf
 import time
-from datetime import datetime
+from datetime import date, datetime
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá 
@@ -57,7 +57,7 @@ def newCatalog():
 # Funciones para agregar informacion al catalogo
 
 def addArtwork(catalog, title, dateAcquired, lstmedium, dimensions, lstconstituentid,
-               objectid, creditline, date, classification, height, width):
+               objectid, creditline, date, classification, height, width, department, length, weight):
 
     dictArtwork = newArtwork(title)
     dictArtwork['DateAcquired'] = dateAcquired
@@ -70,6 +70,9 @@ def addArtwork(catalog, title, dateAcquired, lstmedium, dimensions, lstconstitue
     dictArtwork['Classification'] = classification
     dictArtwork['Height (cm)'] = height
     dictArtwork['Width (cm)'] = width
+    dictArtwork['Department'] = department
+    dictArtwork['Length (cm)'] = length
+    dictArtwork['Weight (kg)'] = weight
     lt.addLast(catalog['artworks'], dictArtwork)
 
     for cID in lstconstituentid:
@@ -127,7 +130,7 @@ def newArtist(constituentid):
 def newArtwork(title):
     artwork = {'Title': "", 'DateAcquired': 0, 'ArtistsID': None, 'Medium': None,
                'Dimensions': "", 'ObjectID': 0, "CreditLine": "", "Artists": [], 'Date': "",
-               'Classification': "", 'Height (cm)': 0, 'Width (cm)': 0}
+               'Classification': "", 'Height (cm)': 0, 'Width (cm)': 0, 'Department': "", 'Length (cm)': 0, 'Weight (kg)': 0}
     artwork['Title'] = title
 
     return artwork
@@ -135,33 +138,40 @@ def newArtwork(title):
 
 # Funciones de consulta
 
+
 def sortArtworks(catalog, ltsize, a1, a2):
 
     dt_objectI1 = datetime.strptime(a1, '%Y-%m-%d').date()
     dt_objectI2 = datetime.strptime(a2, '%Y-%m-%d').date()
     sub_list = lt.subList(catalog['artworks'], 1, ltsize)
     sub_list = sub_list.copy()
-    start_time = time.process_time()
     sorted_list = None
     sorted_list = ms.sort(sub_list, cmpArtworkByDateAcquired)
-    listFinal = []
+    listFinal = lt.newList('ARRAY_LIST')
     purchasedArtworks = 0
     totalArtworks = 0
     for value in lt.iterator(sorted_list):
+        dictT = {}
         if len(value['DateAcquired']) > 1:
             dt_object1 = datetime.strptime(value['DateAcquired'], '%Y-%m-%d').date()
             if ((dt_object1 >= dt_objectI1) and (dt_object1 <= dt_objectI2)):
-                listFinal.append(value)
+                dictT['Title'] = value['Title']
+                dictT['DateAcquired'] = value['DateAcquired']
+                dictT['Date'] = value['Date']
+                dictT['Artists'] = value['Artists']
+                dictT['Medium'] = value['Medium']
+                dictT['Dimensions'] = value['Dimensions']
+                lt.addLast(listFinal, dictT)
+
                 totalArtworks += 1
                 if 'Purchase' in value['CreditLine']:
                     purchasedArtworks += 1
             else:
                 pass
 
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
+    return listFinal, totalArtworks, purchasedArtworks
 
-    return elapsed_time_mseg, listFinal, totalArtworks, purchasedArtworks
+
 
 def sortArtists(catalog,ltsize,a1,a2):
     sub_list = lt.subList(catalog['artists'],1,ltsize)
@@ -215,31 +225,6 @@ def ClassifyArtworksbyTechnique (catalog, artist):
             if value == dictFinal[key]:
                 dictTF[key] = value
                 lt.addLast(lista2, dictTF)
-
-    key_list = list(lista2['elements'][0])
-    Most_used_technique = key_list[0]
-    lista_titulos = []
-    for artwork in lt.iterator (catalog['artworks']):
-        for name in artwork['ArtistsID']:
-            for artista in lt.iterator (catalog['artists']):
-                if artista['name'] == artist:
-                    if artista['ConstituentID']==name:
-                        for x in artwork['Medium']:
-                            if x == Most_used_technique:
-                                lista_titulos.append(artwork['Title'])
-
-    lista_final = lt.newList('ARRAY_LIST')
-    for x in lt.iterator(catalog['artworks']):
-        if x['Title'] in lista_titulos and  Most_used_technique in x['Medium']:
-            dictObras={}
-            dictObras['Título'] = x['Title']
-            dictObras['Fecha'] = x['Date']
-            dictObras['Medio'] = x['Medium']
-            dictObras['Dimensiones'] = x['Dimensions']
-            lt.addLast(lista_final,dictObras)
-
-    return (total_obras, total_medios, Most_used_technique,lista_final)
-    
 
 
 def countArtworksNationality(catalog):
@@ -327,6 +312,64 @@ def createNewDisplay(catalog, a1, a2, area):
 
     return lstExpo, areaTempF
 
+
+def moveDepartment(catalog, department):
+
+    lstDepartment = lt.newList('ARRAY_LIST')
+    totalPrice = 0
+    totalWeight = 0
+    for artwork in lt.iterator(catalog['artworks']):
+        dictDepartment = {}
+        area = 0
+        volume = 0
+        weight = 0
+        p1 = 0
+        p2 = 0
+        p3 = 0
+        may = 0
+        if artwork['Department'] == department:
+            dictDepartment['Title'] = artwork['Title']
+            area = (artwork['Height (cm)'] * artwork['Width (cm)'])/10000
+            volume = (artwork['Height (cm)'] * artwork['Width (cm)'] * artwork['Length (cm)'])/1000000
+            weight = artwork['Weight (kg)']
+            p1 = area * 72
+            p2 = volume * 72
+            p3 = weight * 72
+
+            if p1 > p2:
+                may = p1
+            else:
+                p2 = may
+
+            if p3 > may:
+                may = p3
+
+            if may == 0:
+                may = 48
+
+            dictDepartment['Price'] = may
+            dictDepartment['Artists'] = artwork['Artists']
+            dictDepartment['Classification'] = artwork['Classification']
+            dictDepartment['Date'] = artwork['Date']
+            dictDepartment['Medium'] = artwork['Medium']
+            dictDepartment['Dimensions'] = artwork['Dimensions']
+            lt.addLast(lstDepartment, dictDepartment)
+            totalPrice += may
+            totalWeight += weight
+
+    ltsize = lt.size(lstDepartment)
+    sub_list = lt.subList(lstDepartment, 1, ltsize)
+    sub_list = sub_list.copy()
+    sortedDate_list = None
+    sortedDate_list = ms.sort(sub_list, cmpArtworkByDate)
+    sub_list2 = lt.subList(lstDepartment, 1, ltsize)
+    sub_list2 = sub_list2.copy()
+    sortedPrice_list = None
+    sortedPrice_list = ms.sort(sub_list2, cmpArtworkByPrice)
+
+    return totalPrice, totalWeight, sortedDate_list, sortedPrice_list
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
@@ -343,6 +386,36 @@ def compareArtworks(artworkid, artwork):
 
 
 # Funciones de ordenamiento
+
+def cmpArtworkByDate(artwork1, artwork2):
+
+    if artwork1['Date'] == '':
+        date1 = 2021
+        artwork1['Date'] = 2021
+    else:
+        date1 = int(artwork1['Date'])
+
+    if artwork2['Date'] == '':
+        date2 = 2021
+        artwork2['Date'] = 2021
+    else:
+        date2 = int(artwork2['Date'])
+
+    if date1 < date2:
+        r = True
+    else:
+        r = False
+
+    return r
+
+
+def cmpArtworkByPrice(artwork1, artwork2):
+
+    if artwork1['Price'] < artwork2['Price']:
+        r = True
+    else:
+        r = False
+    return r
 
 
 def cmpArtworkByDateAcquired(artwork1, artwork2):
