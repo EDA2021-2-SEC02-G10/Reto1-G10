@@ -166,7 +166,6 @@ def sortArtworks(catalog, ltsize, a1, a2):
 def sortArtists(catalog,ltsize,a1,a2):
     sub_list = lt.subList(catalog['artists'],1,ltsize)
     sub_list = sub_list.copy()
-    start_time = time.process_time()
     sorted_list = None
     sorted_list = ms.sort(sub_list,cmpArtistbyBirthDate)
     listFinal=[]
@@ -179,11 +178,32 @@ def sortArtists(catalog,ltsize,a1,a2):
                 totalArtists += 1
             else:
                 pass
-    stop_time=time.process_time()
-    elapsed_time=(stop_time-start_time)*1000
+    return listFinal,totalArtists
 
-    return elapsed_time,listFinal,totalArtists
+def ClassifyArtworksbyTechnique (catalog, artist):
+    total_obras = 0
+    total_medios = 0
+    lista_medios = lt.newList('ARRAY_LIST')
+    for artwork in lt.iterator (catalog['artworks']):
+        artistID=artwork['ArtistsID']
+        for name in artistID:
+            IDFinal = name
+            for artista in lt.iterator (catalog['artists']):
+                if artista['name'] == artist:
+                    if artista['ConstituentID']==IDFinal:
+                        total_obras += 1
+                        IDartista = IDFinal
+                        Medium = artwork['Medium']
+                        for x in Medium:
+                            lt.addLast(lista_medios,x)
 
+    lista_sin_repetidos = set(lista_medios['elements'])
+    total_medios = len(lista_sin_repetidos)
+
+    
+
+    
+                
 
 def countArtworksNationality(catalog):
 

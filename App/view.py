@@ -136,7 +136,7 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Listar cronologicamente los artistas")
     print("3- Listar cronologicamente las adquisiciones")
-    print("4- Clasificar cronologicamente los artistas")
+    print("4- Clasificar las obras de un artista por técnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Transportar obras de un departamento")
     print("7- Proponer una exposicion del museo")
@@ -181,8 +181,9 @@ while True:
         printSortedResults(result[1])
 
     elif int(inputs[0]) == 4:
-
-        a = 1
+        nombreartista = str(input ('Indique el nombre del artista al que le desea clasificar sus obras: '))
+        result = controller.ClassifyArtworksbyTechnique (catalog,nombreartista)
+        print (result)
 
     elif int(inputs[0]) == 5:
 
