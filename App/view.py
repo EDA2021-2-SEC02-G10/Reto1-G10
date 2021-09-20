@@ -85,6 +85,7 @@ def printNewDisplay(lstExpo, area):
     print(LastDataLst[2])
 
 def PrintArtistsSortedbyBirthdate(lista):
+    lista_F=[]
     for i in range (1,4):
         artistnamei = lista[-i]['name']
         birthdatei = lista[-i]['BeginDate']
@@ -96,7 +97,10 @@ def PrintArtistsSortedbyBirthdate(lista):
         nacionalityi = lista[-i]['Nationality']
         genderi = lista[-i]['Gender']
         idict ={'Name': artistnamei, 'Birth Date': birthdatei, 'Death Date': deathdatei, 'Nationality': nacionalityi, 'Gender': genderi}
-
+        if lista[-i]['name'] not in lista_F:
+            lista_F.append(idict)
+    
+    for i in range (0,3):
         artistnamef = lista[i]['name']
         birthdatef = lista[i]['BeginDate']
         xf= int(lista[i]['EndDate'])
@@ -107,8 +111,9 @@ def PrintArtistsSortedbyBirthdate(lista):
         nacionalityf = lista[i]['Nationality']
         genderf = lista[i]['Gender']
         fdict ={'Name': artistnamef, 'Birth Date': birthdatef, 'Death Date': deathdatef, 'Nationality': nacionalityf, 'Gender': genderf} 
-        print (idict)
-        print (fdict)
+        if lista[i]['name'] not in lista_F:
+            lista_F.append(fdict)
+    print (lista_F)
 
 def printArtworksbyNationality(result):
 
