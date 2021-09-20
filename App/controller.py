@@ -99,3 +99,8 @@ def createNewDisplay(catalog, a1, a2, area):
 
     return model.createNewDisplay(catalog, a1, a2, area)
 
+def ClassifyArtworksbyTechnique (catalog,artist):
+
+    return model.ClassifyArtworksbyTechnique(catalog,artist)
+    
+
