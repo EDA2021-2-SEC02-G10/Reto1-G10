@@ -208,8 +208,6 @@ def ClassifyArtworksbyTechnique (catalog, artist):
                                 dictFinal[x] = 1
                             else:
                                 dictFinal[x] += 1
-                else:
-                    return (0, 0, 'Ninguna', 'No hay obras de este artista actualmente en el museo')
 
 
     lista_sin_repetidos = set(lista_medios['elements'])
