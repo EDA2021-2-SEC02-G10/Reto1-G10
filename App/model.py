@@ -208,6 +208,9 @@ def ClassifyArtworksbyTechnique (catalog, artist):
                                 dictFinal[x] = 1
                             else:
                                 dictFinal[x] += 1
+                else:
+                    return (0, 0, 'Ninguna', 'No hay obras de este artista actualmente en el museo')
+
 
     lista_sin_repetidos = set(lista_medios['elements'])
     total_medios = len(lista_sin_repetidos)
@@ -237,6 +240,7 @@ def ClassifyArtworksbyTechnique (catalog, artist):
                         for x in artwork['Medium']:
                             if x == Most_used_technique:
                                 lista_titulos.append(artwork['Title'])
+
 
     lista_final = lt.newList('ARRAY_LIST')
     for x in lt.iterator(catalog['artworks']):
