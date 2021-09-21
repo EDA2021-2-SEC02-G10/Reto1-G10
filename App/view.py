@@ -86,6 +86,7 @@ def printNewDisplay(lstExpo, area):
 
 def PrintArtistsSortedbyBirthdate(lista):
     lista_F=[]
+    lista_I=[]
     for i in range (1,4):
         artistnamei = lista[-i]['name']
         birthdatei = lista[-i]['BeginDate']
@@ -112,8 +113,8 @@ def PrintArtistsSortedbyBirthdate(lista):
         genderf = lista[i]['Gender']
         fdict ={'Name': artistnamef, 'Birth Date': birthdatef, 'Death Date': deathdatef, 'Nationality': nacionalityf, 'Gender': genderf} 
         if lista[i]['name'] not in lista_F:
-            lista_F.append(fdict)
-    print (lista_F)
+            lista_I.append(fdict)
+    return (lista_F,lista_I)
 
 
 def printArtworksbyNationality(result):
@@ -195,7 +196,12 @@ while True:
         afinal= int(input ('Indique el año final de nacimiento de los artistas que desea consultar en formato YYYY: '))
         result = controller.sortArtists(catalog, sizeArtists, ainicial,afinal)
         print('En total hay '+ str(result[1])+' artistas que nacieron entre '+str(ainicial)+' y ' + str(afinal))
-        PrintArtistsSortedbyBirthdate(result[0])  
+        
+        print ('Los tres primeros artistas del rango son: ')
+        print(PrintArtistsSortedbyBirthdate(result[0])[0])
+        print ('los tres últimos artistas del rango son: ')
+        print(PrintArtistsSortedbyBirthdate(result[0])[1])
+
                      
     elif int(inputs[0]) == 3:
         aninicial = input('Indique la fecha inicial de las obras que desea consultar en el formato AAAA-MM-DD (con los numeros menores a 10 como 01, 02, etc): ')
