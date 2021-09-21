@@ -47,7 +47,6 @@ operación solicitada
 
 def printSortedResults(result):
 
-    print(result)
     print('En el rango dado hay: ' + str(result[1]))
     print('De esas obras se compraron: '+ str(result[2]))
     print('Las primeras 3 obras del rango en base a su fecha de creacion son: ')

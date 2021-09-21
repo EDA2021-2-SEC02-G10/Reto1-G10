@@ -60,14 +60,17 @@ def loadArtworks(catalog):
             height = 0
         else:
             height = float(row['Height (cm)'])
+
         if row['Width (cm)'] == '':
             width = 0
         else:
             width = float(row['Width (cm)'])
+
         if row['Length (cm)'] == '':
             length = 0
         else:
-            length = float(row['Width (cm)'])
+            length = float(row['Length (cm)'])
+
         if row['Weight (kg)'] == '':
             weight = 0
         else:
